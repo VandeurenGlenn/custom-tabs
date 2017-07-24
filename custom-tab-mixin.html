@@ -1,0 +1,44 @@
+<script>
+  class CustomTabMixin extends HTMLElement {
+
+    static get properties() {
+      return {
+        slot: {
+          value: 'tab',
+          observer: '__slotChange__'
+        }
+      }
+    }
+
+    set name(value) {
+      this.innerHTML = value;
+    }
+
+    created() {
+      this._onMouseIn = this._onMouseIn.bind(this);
+      this._onMouseOut = this._onMouseOut.bind(this);
+    }
+
+    ready() {
+      this.addEventListener('mouseover', this._onMouseIn)
+      this.addEventListener('mouseout', this._onMouseOut)
+    }
+
+    disconnected() {
+      this.removeEventListener('mouseover', this._onMouseIn)
+      this.removeEventListener('mouseout', this._onMouseOut)
+    }
+
+    __slotChange__({value}) {
+      this.setAttribute('slot', value);
+    }
+
+    _onMouseIn() {
+      this.classList.add('over');
+    }
+
+    _onMouseOut() {
+      this.classList.remove('over');
+    }
+  };
+</script>
