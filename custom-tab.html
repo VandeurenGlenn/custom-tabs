@@ -12,6 +12,9 @@
       padding: 8px 12px;
       box-sizing: border-box;
       cursor: pointer;
+
+      --svg-icon-size: 16px;
+      --svg-icon-color: #EEE;
     }
 
     :host(.custom-selected) {
@@ -27,17 +30,14 @@
     static get properties() {
       return {
         slot: {
-          value: 'tab'
+          value: 'tab',
+          observer: '__slotChange__'
         }
       }
     }
 
     set name(value) {
       this.innerHTML = value;
-    }
-
-    set slot(value) {
-      this.setAttribute('slot', value);
     }
 
     created() {
@@ -55,6 +55,10 @@
       this.removeEventListener('mouseout', this._onMouseOut)
     }
 
+    __slotChange__({value}) {
+      this.setAttribute('slot', value);
+    }
+
     _onMouseIn() {
       this.classList.add('over');
     }
@@ -63,7 +67,7 @@
       this.classList.remove('over');
     }
 
-    _close() {
+    _click() {
       this.dispatchEvent(new CustomEvent('custom-tab-close', {
         detail: this
       }));
