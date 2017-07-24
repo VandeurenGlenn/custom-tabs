@@ -40,6 +40,14 @@
 <script>
   Backed(class CustomTab extends HTMLElement {
 
+    static get properties() {
+      return {
+        slot: {
+          value: 'tab'
+        }
+      }
+    }
+
     set name(value) {
       this.innerHTML = value;
     }

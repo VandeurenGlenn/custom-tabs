@@ -1,4 +1,6 @@
 <link rel="import" href="../backed/backed.html">
+<link rel="import" href="../custom-select-mixins/custom-selector-mixin.html">
+
 <link rel="import" href="custom-tab.html">
 
 <template id="custom-tabs">
@@ -12,39 +14,7 @@
 </template>
 
 <script>
-  Backed(class CustomTabs extends HTMLElement {
-
-    /**
-    * @return {String}
-    */
-    get attrForSelected() {
-     return this.getAttribute('attr-for-selected') || 'name';
-    }
-
-    set attrForSelected(value) {
-     this.setAttribute('attr-for-selected', value);
-    }
-
-     /**
-     * @param {String} page
-     */
-    select(page) {
-      if (typeof page === 'object') {
-        if (this.previousSelected) {
-          this.previousSelected.classList.remove('custom-selected');
-        }
-        this.previousSelected = page;
-        page.classList.add('custom-selected');
-      } else {
-        for (let i = 0; i < this.children.length; i++) {
-          let child = this.children[i];
-          if (child.getAttribute(this.attrForSelected) === page) {
-            child.classList.add('custom-selected');
-          } else {
-            child.classList.remove('custom-selected');
-          }
-        }
-      }
-    }
+  Backed(class CustomTabs extends CustomSelectorMixin {
+    // TODO: make scrollable
   });
 </script>
