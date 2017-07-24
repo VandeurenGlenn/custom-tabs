@@ -8,24 +8,10 @@
       width: 148px;
       height: 48px;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       padding: 8px 12px;
       box-sizing: border-box;
       cursor: pointer;
-
-      --svg-icon-size: 16px;
-      --svg-icon-color: #EEE;
-    }
-    .flex {
-      flex: 1;
-    }
-
-    svg-icon {
-      opacity: 0;
-    }
-
-    :host(.over) svg-icon {
-      opacity: 1;
     }
 
     :host(.custom-selected) {
@@ -33,8 +19,6 @@
     }
   </style>
   <slot></slot>
-  <span class="flex"></span>
-  <svg-icon icon="close" on-click="_close"></svg-icon>
 </template>
 
 <script>
