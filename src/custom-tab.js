@@ -45,6 +45,10 @@ customElements.define('custom-tab', class CustomTab extends HTMLElement {
       :host(.custom-selected) {
         border-bottom: 2px solid var(--tab-underline-color);
       }
+      
+      ::slotted(*) {
+        pointer-events: none;
+      }
     </style>
     <slot></slot>
     `;
