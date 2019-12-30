@@ -20,9 +20,7 @@
   },
   "homepage": "https://github.com/VandeurenGlenn/custom-tabs#readme",
   "dependencies": {
-    "backed": "^0.12.0",
-    "custom-renderer-mixin": "^0.1.4",
-    "custom-select-mixins": "^0.11.2"
+    "custom-select-mixins": "^0.11.3"
   },
   "resolutions": {
     "backed": "0.12.0"

@@ -1,14 +1,14 @@
-import define from '../../backed/src/utils/define.js';
-import RenderMixin from '../../custom-renderer-mixin/src/render-mixin.js';
-import CustomSelectorMixin from '../../custom-select-mixins/src/selector-mixin.js'
+import SelectorMixin from './../node_modules/custom-select-mixins/src/selector-mixin.js';
 
-define(class CustomTabs extends RenderMixin(CustomSelectorMixin(HTMLElement)) {
+customElements.define('custom-tabs', class CustomTabs extends SelectorMixin(HTMLElement) {
   constructor() {
     super()
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = this.template;
   }
   // TODO: make scrollable
   get template() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;

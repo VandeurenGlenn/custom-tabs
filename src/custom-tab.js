@@ -1,15 +1,13 @@
-import define from '../../backed/src/utils/define.js';
-import RenderMixin from '../../custom-renderer-mixin/src/render-mixin.js'
-
-export default define(class CustomTab extends RenderMixin(HTMLElement) {
+customElements.define('custom-tab', class CustomTab extends HTMLElement {
   constructor() {
-    super();
+    super()
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = this.template;
     this._onMouseIn = this._onMouseIn.bind(this);
     this._onMouseOut = this._onMouseOut.bind(this);
   }
 
   connectedCallback() {
-    super.connectedCallback();
     this.addEventListener('mouseover', this._onMouseIn)
     this.addEventListener('mouseout', this._onMouseOut)
   }
@@ -28,7 +26,7 @@ export default define(class CustomTab extends RenderMixin(HTMLElement) {
   }
 
   get template() {
-    return html`
+    return `
     <style>
       :host {
         position: relative;
@@ -40,13 +38,12 @@ export default define(class CustomTab extends RenderMixin(HTMLElement) {
         padding: 8px 12px;
         box-sizing: border-box;
         cursor: pointer;
-
-        --svg-icon-size: 16px;
-        --svg-icon-color: #EEE;
+        
+        --tab-underline-color:  #00B8D4;
       }
 
       :host(.custom-selected) {
-        border-bottom: 2px solid #00B8D4;
+        border-bottom: 2px solid var(--tab-underline-color);
       }
     </style>
     <slot></slot>
