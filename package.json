@@ -1,6 +1,6 @@
 {
   "name": "custom-tabs",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "```sh\r yarn add custom-tabs\r ```",
   "main": "custom-tabs.js",
   "module": "src/custom-tabs.js",
