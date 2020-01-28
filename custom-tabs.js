@@ -141,7 +141,13 @@
       }
 
       get _assignedNodes() {
-        return 'assignedNodes' in this.slotted ? this.slotted.assignedNodes() : this.children;
+        const nodes = 'assignedNodes' in this.slotted ? this.slotted.assignedNodes() : this.children;
+        const arr = [];
+        for (var i = 0; i < nodes.length; i++) {
+          const node = nodes[i];
+          if (node.nodeType === 1) arr.push(node);
+        }
+        return arr;
       }
 
       /**
@@ -169,7 +175,9 @@
        * @param {string|number|HTMLElement} selected
        */
       select(selected) {
-        this.selected = selected;
+        if (selected) this.selected = selected;
+        // TODO: fix selectedobservers
+        if (this.multi) this.__selectedObserver__();
       }
 
       next(string) {
@@ -207,31 +215,32 @@
        * @param {string|number|HTMLElement} change.value
        */
       __selectedObserver__(value) {
-        switch (typeof this.selected) {
-          case 'object':
-            this._updateSelected(this.selected);
-            break;
-          case 'string':
-            for (const child of this._assignedNodes) {
-              if (child.nodeType === 1) {
-                if (child.getAttribute(this.attrForSelected) === this.selected) {
-                  return this._updateSelected(child);
-                }
+        const type = typeof this.selected;
+        if (Array.isArray(this.selected)) {
+          for (const child of this._assignedNodes) {
+            if (child.nodeType === 1) {
+              if (this.selected.indexOf(child.getAttribute(this.attrForSelected)) !== -1) {
+                child.classList.add('custom-selected');
+              } else {
+                child.classList.remove('custom-selected');
               }
             }
-            if (this.currentSelected) {
-              this.currentSelected.classList.remove('custom-selected');
+          }
+          return;
+        } else if (type === 'object') return this._updateSelected(this.selected);
+        else if (type === 'string') {
+          for (const child of this._assignedNodes) {
+            if (child.nodeType === 1) {
+              if (child.getAttribute(this.attrForSelected) === this.selected) {
+                return this._updateSelected(child);
+              }
             }
-            break;
-          default:
-            // set selected by index
-            const child = this._assignedNodes[this.selected];
-            if (child && child.nodeType === 1) {
-              this._updateSelected(child);
-            // remove selected even when nothing found, better to return nothing
-            } else if (this.currentSelected) {
-              this.currentSelected.classList.remove('custom-selected');
-            }
+          }
+        } else {
+          // set selected by index
+          const child = this._assignedNodes[this.selected];
+          if (child && child.nodeType === 1) this._updateSelected(child);
+          // remove selected even when nothing found, better to return nothing
         }
       }
     }
@@ -245,6 +254,10 @@
           selected: {
             value: 0,
             observer: '__selectedObserver__'
+          },
+          multi: {
+            value: false,
+            reflect: true
           }
         });
       }
@@ -260,12 +273,26 @@
         this.removeEventListener('click', this._onClick);
       }
       _onClick(event) {
-        const target = event.path[0];
+        const target = event.path ? event.path[0] : event.composedPath()[0];
         const attr = target.getAttribute(this.attrForSelected);
+        let selected;
+
         if (target.localName !== this.localName) {
-          this.selected = attr ? attr : target;
-          this.dispatchEvent(new CustomEvent('selected', { detail: this.selected }));
+          selected = attr ? attr : target;
+        } else {
+          selected = attr;
         }
+        if (this.multi) {
+          if (!Array.isArray(this.selected)) this.selected = [];
+          const index = this.selected.indexOf(selected);
+          if (index === -1) this.selected.push(selected);
+          else this.selected.splice(index, 1);
+          // trigger observer
+          this.select(this.selected);
+
+        } else this.selected = selected;
+
+        this.dispatchEvent(new CustomEvent('selected', { detail: selected }));
       }
     }
   }
