@@ -3,5 +3,5 @@
 
 ## Install
 ```sh
-bower install custom-tabs
+npm install custom-tabs --save
 ```
